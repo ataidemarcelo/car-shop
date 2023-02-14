@@ -1,9 +1,11 @@
 import {
+  isValidObjectId,
   Model,
   models,
   Schema,
   model,
 } from 'mongoose';
+import { UnprocessableEntityException } from '../exceptions';
 
 abstract class AbstractODM<T> {
   protected model: Model<T>;
@@ -18,6 +20,16 @@ abstract class AbstractODM<T> {
 
   public async create(obj: T): Promise<T> {
     return this.model.create({ ...obj });
+  }
+
+  public async find(): Promise<T[]> {
+    return this.model.find();
+  }
+
+  public async findById(id: string): Promise<T | null> {
+    if (!isValidObjectId(id)) throw new UnprocessableEntityException('Invalid mongo id');
+
+    return this.model.findById(id);
   }
 }
 
