@@ -4,8 +4,11 @@ import {
   models,
   Schema,
   model,
+  UpdateQuery,
 } from 'mongoose';
 import { UnprocessableEntityException } from '../exceptions';
+
+const MESSAGE_ERROR = 'Invalid mongo id';
 
 abstract class AbstractODM<T> {
   protected model: Model<T>;
@@ -27,9 +30,20 @@ abstract class AbstractODM<T> {
   }
 
   public async findById(id: string): Promise<T | null> {
-    if (!isValidObjectId(id)) throw new UnprocessableEntityException('Invalid mongo id');
+    if (!isValidObjectId(id)) throw new UnprocessableEntityException(MESSAGE_ERROR);
 
     return this.model.findById(id);
+  }
+
+  public async update(id: string, obj: T): Promise<T | null> {
+    if (!isValidObjectId(id)) throw new UnprocessableEntityException(MESSAGE_ERROR);
+
+    await this.model.updateOne(
+      { _id: id },
+      { ...obj } as UpdateQuery<T>,
+    );
+    
+    return { id, ...obj } as T;
   }
 }
 
