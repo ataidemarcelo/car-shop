@@ -43,6 +43,17 @@ class MotorcycleService {
 
     return this.createMotorcycleDomain(motorcycle);
   }
+
+  public async update(id: string, newMotorcycleData: IMotorcycle) {
+    const motorcycleODM = new MotorcycleODM();
+    const motorcycle = await motorcycleODM.findById(id);
+
+    if (!motorcycle) throw new NotFoundException('Motorcycle not found');
+
+    const updatedMotorcycle = await motorcycleODM.update(id, newMotorcycleData);
+
+    return updatedMotorcycle;
+  }
 }
 
 export default MotorcycleService;
