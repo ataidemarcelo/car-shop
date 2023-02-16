@@ -1,7 +1,7 @@
 import Car from '../Domains/Car';
-import { NotFoundException } from '../exceptions';
-import ICar from '../Interfaces/ICar';
 import CarODM from '../Models/CarODM';
+import { ICar } from '../Interfaces';
+import { NotFoundException } from '../exceptions';
 
 class CarService {
   private createCarDomain(car: ICar | null): Car | null {
