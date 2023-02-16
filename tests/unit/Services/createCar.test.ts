@@ -3,6 +3,7 @@ import sinon from 'sinon';
 import { Model } from 'mongoose';
 
 import CarService from '../../../src/Services/CarService';
+import CarODM from '../../../src/Models/CarODM';
 
 const carInput = {
   model: 'Marea',
@@ -34,6 +35,17 @@ describe('CarService unit tests', function () {
       const result = await service.create(carInput);
 
       expect(result).to.be.deep.equal(carOutput);
+
+      sinon.restore();
+    });
+
+    it('should return null if CarODM.create returns undefined', async function () {    
+      sinon.stub(CarODM.prototype, 'create').resolves(undefined);
+
+      const service = new CarService();
+      const result = await service.create(carInput);
+
+      expect(result).to.be.equal(null);
 
       sinon.restore();
     });
